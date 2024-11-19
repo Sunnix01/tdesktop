@@ -316,13 +316,21 @@ Row::~Row() {
 	clearTopicJumpRipple();
 }
 
-void Row::recountHeight(float64 narrowRatio) {
+void Row::recountHeight(float64 narrowRatio, FilterId filterId) {
 	if (const auto history = _id.history()) {
-		_height = history->isForum()
+		const auto hasTags = _id.entry()->hasChatsFilterTags(filterId);
+		_height = (history->isForum() && hasTags)
+			? anim::interpolate(
+				st::taggedForumDialogRow.height,
+				st::taggedDialogRow.height,
+				narrowRatio)
+			: (history->isForum() && !hasTags)
 			? anim::interpolate(
 				st::forumDialogRow.height,
 				st::defaultDialogRow.height,
 				narrowRatio)
+			: hasTags
+			? st::taggedDialogRow.height
 			: st::defaultDialogRow.height;
 	} else if (_id.folder()) {
 		_height = st::defaultDialogRow.height;
