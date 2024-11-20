@@ -251,6 +251,7 @@ public:
 		return _chatListPeerBadge;
 	}
 
+	[[nodiscard]] bool hasChatsFilterTags(FilterId exclude) const;
 protected:
 	void notifyUnreadStateChange(const UnreadState &wasState);
 	inline auto unreadStateChangeNotifier(bool required);
@@ -281,6 +282,7 @@ private:
 	uint64 _sortKeyInChatList = 0;
 	uint64 _sortKeyByDate = 0;
 	base::flat_map<FilterId, int> _pinnedIndex;
+	base::flat_map<FilterId, uint8> _tagColors;
 	mutable Ui::PeerBadge _chatListPeerBadge;
 	mutable Ui::Text::String _chatListNameText;
 	mutable int _chatListNameVersion = 0;
